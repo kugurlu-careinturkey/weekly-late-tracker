@@ -1,0 +1,55 @@
+@layout()
+  <div class="form-container" style="max-width: 1000px;">
+    <h1>Weekly Reports</h1>
+    <form action="{{ route('late_entries.index') }}" method="GET" style="flex-direction: row; align-items: flex-end; gap: 15px; margin-bottom: 30px;">
+      <div style="flex: 1;">
+        <label>Department</label>
+        <select name="departmentId">
+          <option value="">All Departments</option>
+          @each(dep in departments)
+            <option value="{{ dep.id }}" {{ filters.departmentId == dep.id ? 'selected' : '' }}>
+              {{ dep.name }}
+            </option>
+          @end
+        </select>
+      </div>
+
+      <div style="width: 100px;">
+        <label>Week</label>
+        <input type="number" name="week" value="{{ filters.week || '' }}" placeholder="1-52">
+      </div>
+
+      <button type="submit" style="width: auto; padding: 0 20px;">Filter</button>
+      <a href="{{ route('late_entries.index') }}" style="font-size: 14px; color: var(--gray-7);">Reset</a>
+    </form>
+
+    <table style="width: 100%; border-collapse: collapse;">
+      <thead>
+        <tr style="border-bottom: 2px solid var(--gray-3); text-align: left;">
+          <th style="padding: 10px;">Employee</th>
+          <th style="padding: 10px;">Department</th>
+          <th style="padding: 10px;">Week</th>
+          <th style="padding: 10px">Late Date</th>
+          <th style="padding: 10px;">Delay (Min)</th>
+        </tr>
+      </thead>
+      <tbody>
+        @each(entry in entries)
+          <tr style="border-bottom: 1px solid var(--gray-1);">
+            <td style="padding: 10px;">{{ entry.user.fullName }}</td>
+            <td style="padding: 10px;">{{ entry.user.department?.name || '-' }}</td>
+            <td style="padding: 10px;">Week {{ entry.weekNumber }}</td>
+            <td style="padding: 10px;">{{ entry.lateDate.toFormat('dd/MM/yyyy') }}</td>
+            <td style="padding: 10px; font-weight: bold; color: {{ entry.durationMinutes > 30 ? '#fb2c36' : 'inherit' }}">
+              {{ entry.durationMinutes }} min
+            </td>
+          </tr>
+        @else
+          <tr>
+            <td colspan="5" style="padding: 40px; text-align: center;">No records found for this filter.</td>
+          </tr>
+        @end
+      </tbody>
+    </table>
+  </div>
+@end

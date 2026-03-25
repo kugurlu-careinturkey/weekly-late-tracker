@@ -1,0 +1,49 @@
+@layout()
+  <div class="form-container" style="max-width: 800px;">
+    <div class="form-header">
+        <h1>Late Entry</h1>
+        <p>Enter late entries</p>
+    </div>
+
+    @form({ action: route('late_entries.store'), method: 'POST' })      
+      <div style="margin-bottom: 30px;">
+        <label for="entryDate">Record date</label>
+        <input type="date" name="entryDate" id="entryDate" required 
+               value="{{ new Date().toISOString().split('T')[0] }}">
+      </div>
+
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+        <thead>
+          <tr style="text-align: left; border-bottom: 2px solid var(--gray-3); color: var(--gray-8);">
+            <th style="padding: 12px;">Employee Name:</th>
+            <th style="padding: 12px; width: 150px;">Minutes Late</th>
+          </tr>
+        </thead>
+        <tbody>
+          @each(employee in employees)
+            <tr style="border-bottom: 1px solid var(--gray-2);">
+              <td style="padding: 12px; font-weight: 500;">
+                {{ employee.fullName }}
+                <input type="hidden" name="userId[]" value="{{ employee.id }}">
+              </td>
+              <td style="padding: 12px;">
+                <input type="number" name="minutes[]" value="0" min="0" 
+                       style="height: 35px; text-align: center;">
+              </td>
+            </tr>
+          @else
+            <tr>
+              <td colspan="2" style="padding: 20px; text-align: center; color: var(--gray-6);">
+                No employees were found in the system.
+              </td>
+            </tr>
+          @end
+        </tbody>
+      </table>
+
+      <div style="display: flex; justify-content: flex-end;">
+        @!button({ text: 'Save weekly Records', type: 'submit' })
+      </div>
+    @end
+  </div>
+@end

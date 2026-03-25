@@ -1,0 +1,26 @@
+@layout()
+  <div class="form-container">
+    <div>
+        <h1> Add Department </h1>
+        <p>
+          Enter details of department
+        </p>
+    </div>
+
+    <div>
+      @form({ route: 'departments.store', method: 'POST' })
+            <div>
+              @field.root({ name: 'name' })
+                @!field.label({ text: 'Department name' })
+                @!input.control()
+                @!field.error()
+              @end
+            </div>
+
+            <div>
+              @!button({ text: 'Save', type: 'submit' })
+            </div>
+        @end
+    </div>
+  </div>
+@end
